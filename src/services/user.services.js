@@ -15,6 +15,10 @@ async function getUsers() {
 }
 
 async function deleteUser(id) {
+  const userExists = await getUser({ _id: id });
+  if (!userExists) {
+    throw new ErrorResponse('User does not exist', 404);
+  }
   await UserModel.findByIdAndDelete(id);
   return {
     message: 'Success',
