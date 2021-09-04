@@ -4,7 +4,7 @@ import {
   deleteUsers,
   getUsers,
   loginUser,
-} from '../../services/user/auth.js';
+} from '../services/user.services.js';
 
 async function httpGetUsers(req, res) {
   res.status(200).json(await getUsers());
