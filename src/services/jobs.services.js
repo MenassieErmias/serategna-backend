@@ -7,8 +7,8 @@ async function createJob(body, author) {
   });
 }
 
-async function getJobs(filter) {
-  return JobModel.find(filter).populate('employer', 'id fullName role email');
+async function getJobs() {
+  return JobModel.find().populate('employer', 'id fullName role email');
 }
 
 async function getJob(id) {
