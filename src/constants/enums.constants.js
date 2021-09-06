@@ -3,3 +3,9 @@ export const ROLE = Object.freeze({
   FREELANCER: 'FREELANCER',
   EMPLOYER: 'EMPLOYER',
 });
+
+export const STATUS = Object.freeze({
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+});
