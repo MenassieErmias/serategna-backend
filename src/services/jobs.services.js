@@ -1,6 +1,6 @@
 import JobModel from '../models/jobs.mongoose.js';
 
-async function createJob(body, author) {
+async function createJob(body, employer) {
   return JobModel.create({
     ...body,
     employer,
@@ -9,6 +9,17 @@ async function createJob(body, author) {
 
 async function getJobs() {
   return JobModel.find().populate('employer', 'id fullName role email');
+}
+
+async function getOwnJobs(employer) {
+  return JobModel.find({ employer }).populate(
+    'employer',
+    'id fullName role email'
+  );
+}
+
+async function getFilterdJob(filter) {
+  return JobModel.findOne(filter).populate('employer', 'id');
 }
 
 async function getJob(id) {
@@ -27,4 +38,13 @@ async function deleteJobs() {
   return JobModel.deleteMany();
 }
 
-export { createJob, getJobs, getJob, updateJob, deleteJob, deleteJobs };
+export {
+  createJob,
+  getJobs,
+  getOwnJobs,
+  getJob,
+  getFilterdJob,
+  updateJob,
+  deleteJob,
+  deleteJobs,
+};

@@ -8,7 +8,6 @@ export async function isEmployer(req, _, next) {
 }
 
 export async function isAdmin(req, _, next) {
-  console.log(currentUser);
   if (req.user.role !== ROLE.ADMIN)
     throw new ErrorResponse('Not authorized to perform this action', 403);
   next();

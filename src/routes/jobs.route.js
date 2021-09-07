@@ -5,6 +5,7 @@ import {
   httpDeleteJobs,
   httpGetJob,
   httpGetJobs,
+  httpOwnGetJobs,
   httpUpdateJob,
 } from '../controllers/jobs.controllers.js';
 import { errorCatcher } from '../middlewares/error.js';
@@ -38,6 +39,13 @@ router
     errorCatcher(isAuthenticated),
     errorCatcher(isEmployer),
     errorCatcher(httpDeleteJob)
+  );
+router
+  .route('/own/:employerId')
+  .get(
+    errorCatcher(isAuthenticated),
+    errorCatcher(isEmployer),
+    errorCatcher(httpOwnGetJobs)
   );
 
 export default router;

@@ -13,6 +13,10 @@ const applicationSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    employerId: {
+      type: String,
+      required: true,
+    },
     coverLetter: {
       type: String,
       required: true,

@@ -6,6 +6,6 @@ export const ROLE = Object.freeze({
 
 export const STATUS = Object.freeze({
   PENDING: 'PENDING',
-  APPROVED: 'APPROVED',
+  ACCEPTED: 'ACCEPTED',
   REJECTED: 'REJECTED',
 });

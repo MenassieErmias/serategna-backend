@@ -2,31 +2,51 @@ import {
   createApplication,
   deleteApplication,
   deleteApplications,
+  getAllEmployerPostsApplications,
   getApplication,
   getApplications,
   getJobApplications,
+  getOwnApplications,
   updateApplication,
 } from '../services/application.services.js';
-import { ErrorResponse } from '../../utils/errorResponse.js';
+import { ErrorResponse } from '../utils/errorResponse.js';
 
 async function httpCreateApplication(req, res) {
+  console.log(req.body);
   const alreadyApplied = await getApplication({
-    auditionPostId: req.body.auditionPostId,
-    applicantId: req.user._id,
+    $and: [
+      {
+        jobId: req.body.jobId,
+      },
+      {
+        applicantId: req.user._id,
+      },
+    ],
   });
+  console.log(alreadyApplied);
   if (alreadyApplied) throw new ErrorResponse('you have already applied', 400);
 
   return res.status(201).json(createApplication(req.body, req.user._id));
 }
 
 async function httpGetApplications(req, res) {
+  console.log(req.params.query);
   return res.status(200).json(await getApplications());
 }
 
 async function httpGetJobApplications(req, res) {
+  return res.status(200).json(await getJobApplications(req.params.jobId));
+}
+async function httpGetOwnApplications(req, res) {
   return res
     .status(200)
-    .json(await getJobApplications(req.params.auditionPostId));
+    .json(await getOwnApplications(req.params.freelancerId));
+}
+
+async function httpGetAllEmployerPostsApplications(req, res) {
+  return res
+    .status(200)
+    .json(await getAllEmployerPostsApplications(req.params.employerId));
 }
 
 async function httpGetApplication(req, res) {
@@ -42,9 +62,6 @@ async function httpUpdateApplication(req, res) {
   if (!application) {
     throw new ErrorResponse('Application does not exist', 404);
   }
-  if (application.applicantId.toString() !== req.user._id.toString())
-    throw new ErrorResponse("You're not authorized to do this", 403);
-
   return res
     .status(200)
     .json(await updateApplication(application.id, req.body));
@@ -70,7 +87,9 @@ export {
   httpCreateApplication,
   httpGetApplications,
   httpGetJobApplications,
+  httpGetOwnApplications,
   httpGetApplication,
+  httpGetAllEmployerPostsApplications,
   httpUpdateApplication,
   httpDeleteApplication,
   httpDeleteApplications,

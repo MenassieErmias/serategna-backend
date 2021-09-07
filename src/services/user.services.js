@@ -1,10 +1,11 @@
-import UserModel from '../../models/user.mongoose.js';
-import { ErrorResponse } from '../../utils/errorResponse.js';
+import UserModel from '../models/user.mongoose.js';
+import { ErrorResponse } from '../utils/errorResponse.js';
 import {
   generatePasswordHash,
   validatePassword,
-} from '../../utils/hashpassword.js';
-import { generateJWT } from '../../utils/generateJWT.js';
+} from '../utils/hashpassword.js';
+import { generateJWT } from '../utils/generateJWT.js';
+import { ROLE } from '../constants/enums.constants.js';
 
 async function getUser(filter, projection = {}) {
   return UserModel.findOne(filter, projection);
@@ -12,6 +13,14 @@ async function getUser(filter, projection = {}) {
 
 async function getUsers() {
   return UserModel.find();
+}
+
+async function getFreeLancers() {
+  return UserModel.find({ role: ROLE.FREELANCER });
+}
+
+async function getEmployers() {
+  return UserModel.find({ role: ROLE.EMPLOYER });
 }
 
 async function deleteUser(id) {
@@ -25,13 +34,15 @@ async function deleteUser(id) {
   };
 }
 
+async function updateSelf(id, body) {
+  return await UserModel.updateOne({ _id: id }, body);
+}
+
 async function deleteUsers() {
   return UserModel.deleteMany();
 }
 
 async function createUser(user) {
-  const emailExists = getUser({ email: user.email });
-  if (emailExists) throw new ErrorResponse('This email address is in use', 400);
   user.password = await generatePasswordHash(user.password);
   return UserModel.create(user);
 }
@@ -50,9 +61,20 @@ async function loginUser({ email, password }) {
     fullName: user.fullName,
     email: user.email,
     role: user.role,
+    profession: user.profession,
     phoneNumber: user.phoneNumber,
     token,
   };
 }
 
-export { getUser, getUsers, deleteUser, deleteUsers, createUser, loginUser };
+export {
+  getUser,
+  getUsers,
+  getFreeLancers,
+  getEmployers,
+  deleteUser,
+  deleteUsers,
+  updateSelf,
+  createUser,
+  loginUser,
+};

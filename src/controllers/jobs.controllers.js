@@ -4,16 +4,21 @@ import {
   deleteJobs,
   getJob,
   getJobs,
+  getOwnJobs,
   updateJob,
 } from '../services/jobs.services.js';
-import { ErrorResponse } from '../../utils/errorResponse.js';
-
+import { ErrorResponse } from '../utils/errorResponse.js';
 async function httpCreateJob(req, res) {
+  console.log(req.body);
   res.status(201).json(await createJob(req.body, req.user._id));
 }
 
 async function httpGetJobs(req, res) {
-  res.status(200).json(await getJobs(req.body));
+  console.log('hi');
+  res.status(200).json(await getJobs());
+}
+async function httpOwnGetJobs(req, res) {
+  res.status(200).json(await getOwnJobs(req.params.employerId));
 }
 
 async function httpGetJob(req, res) {
@@ -25,11 +30,12 @@ async function httpGetJob(req, res) {
 }
 
 async function httpUpdateJob(req, res) {
+  console.log('id' + req.user._id);
   const Job = await getJob(req.params.id);
   if (!Job) {
     throw new ErrorResponse('Job does not exist', 404);
   }
-  if (Job.author._id.toString() !== req.user._id.toString())
+  if (Job.employer._id.toString() !== req.user._id.toString())
     throw new ErrorResponse("You're not authorized to do this", 403);
 
   res.status(200).json(await updateJob(Job.id, req.body));
@@ -51,6 +57,7 @@ export {
   httpCreateJob,
   httpUpdateJob,
   httpGetJobs,
+  httpOwnGetJobs,
   httpGetJob,
   httpDeleteJob,
   httpDeleteJobs,
