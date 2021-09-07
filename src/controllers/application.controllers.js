@@ -1,8 +1,11 @@
 import {
   createApplication,
+  deleteApplication,
+  deleteApplications,
   getApplication,
   getApplications,
   getAuditionPostApplications,
+  updateApplication,
 } from '../services/application.services.js';
 import { ErrorResponse } from '../../utils/errorResponse.js';
 
@@ -34,9 +37,41 @@ async function httpGetApplication(req, res) {
   return res.status(200).json(application);
 }
 
+async function httpUpdateApplication(req, res) {
+  const application = await getApplication({ _id: req.params.id });
+  if (!application) {
+    throw new ErrorResponse('Application does not exist', 404);
+  }
+  if (application.applicantId.toString() !== req.user._id.toString())
+    throw new ErrorResponse("You're not authorized to do this", 403);
+
+  return res
+    .status(200)
+    .json(await updateApplication(application.id, req.body));
+}
+
+async function httpDeleteApplication(req, res) {
+  const application = await getApplication({ _id: req.params.id });
+  if (!application) {
+    throw new ErrorResponse('Application does not exist', 404);
+  }
+  return res.status(200).json(await deleteApplication(req.params.id));
+}
+
+async function httpDeleteApplications(req, res) {
+  const applicationsExist = await getApplications();
+  if (!applicationsExist) {
+    throw new ErrorResponse('There is no application', 404);
+  }
+  return res.status(200).json(await deleteApplications());
+}
+
 export {
   httpCreateApplication,
   httpGetApplications,
   httpGetAuditionPostApplications,
   httpGetApplication,
+  httpUpdateApplication,
+  httpDeleteApplication,
+  httpDeleteApplications,
 };
