@@ -4,7 +4,7 @@ import {
   deleteApplications,
   getApplication,
   getApplications,
-  getAuditionPostApplications,
+  getJobApplications,
   updateApplication,
 } from '../services/application.services.js';
 import { ErrorResponse } from '../../utils/errorResponse.js';
@@ -23,10 +23,10 @@ async function httpGetApplications(req, res) {
   return res.status(200).json(await getApplications());
 }
 
-async function httpGetAuditionPostApplications(req, res) {
+async function httpGetJobApplications(req, res) {
   return res
     .status(200)
-    .json(await getAuditionPostApplications(req.params.auditionPostId));
+    .json(await getJobApplications(req.params.auditionPostId));
 }
 
 async function httpGetApplication(req, res) {
@@ -69,7 +69,7 @@ async function httpDeleteApplications(req, res) {
 export {
   httpCreateApplication,
   httpGetApplications,
-  httpGetAuditionPostApplications,
+  httpGetJobApplications,
   httpGetApplication,
   httpUpdateApplication,
   httpDeleteApplication,

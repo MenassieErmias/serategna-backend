@@ -1,8 +1,12 @@
 import { Router } from 'express';
 import {
   httpCreateApplication,
+  httpDeleteApplication,
   httpDeleteApplications,
+  httpGetApplication,
   httpGetApplications,
+  httpGetJobApplications,
+  httpUpdateApplication,
 } from '../controllers/application.controllers.js';
 import { errorCatcher } from '../middlewares/error.js';
 import { isAuthenticated } from '../middlewares/isAuthenticated..js';
@@ -19,5 +23,8 @@ router
   .get(errorCatcher(isAuthenticated), errorCatcher(httpGetApplication))
   .put(errorCatcher(isAuthenticated), errorCatcher(httpUpdateApplication))
   .delete(errorCatcher(isAuthenticated), errorCatcher(httpDeleteApplication));
+router
+  .route('/job/:jobId')
+  .get(errorCatcher(isAuthenticated), errorCatcher(httpGetJobApplications));
 
 export default router;
